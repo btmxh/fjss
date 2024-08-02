@@ -61,7 +61,10 @@ class StaticFJSS(FJSS):
         self.lower_bound = lower_bound
 
     @staticmethod
-    def load(name: str, path: str, lower_bound: Time | None = None) -> "StaticFJSS":
+    def load(
+        path: str, name: str | None = None, lower_bound: Time | None = None
+    ) -> "StaticFJSS":
+        name = name or path
         jobs: list[Job] = []
         with open(path, "r") as f:
             num_jobs, num_machines = list(map(int, f.readline().split()[:2]))
@@ -130,7 +133,7 @@ with open("./fjsp-instances/instances.json") as f:
         if lower_bound is None:
             lower_bound = instance["bounds"]["lower"]
         assert lower_bound is not None
-        problem = StaticFJSS.load(path, "./fjsp-instances/" + path, lower_bound)
+        problem = StaticFJSS.load("./fjsp-instances/" + path, path, lower_bound)
         FJSP_INSTANCES[path] = problem
 
 
@@ -155,4 +158,4 @@ if __name__ == "__main__":
     assert dfjss.num_machines == 10
     jobs = list(dfjss.generate_jobs())
 
-    assert len(StaticFJSSSet.barnes().problems) == 21
+    assert len(StaticFJSSSet("barnes").problems) == 21
