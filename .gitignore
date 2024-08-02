@@ -1,0 +1,6 @@
+# manually downloaded from: https://web.archive.org/web/20070125203851/www.idsia.ch/~monaldo/fjsp.html
+dataset/
+
+# cpython stuff
+__pycache__
+
