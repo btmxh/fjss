@@ -146,7 +146,7 @@ class Simulation:
         next_op_index = event.operation_index + 1
         if next_op_index < len(event.job.operations):
             self.handle_new_operation(event.job, next_op_index)
-        self.update_queue(event.operation_index)
+        self.update_queue(event.machine)
 
     def log(self, s: str):
         global VERBOSE
