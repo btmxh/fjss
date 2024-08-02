@@ -17,8 +17,6 @@ class MachineQueueItem:
     def get_operation(self) -> Operation:
         return self.job.operations[self.op_index]
 
-    pass
-
 
 VERBOSE = getenv("VERBOSE") == "1"
 
