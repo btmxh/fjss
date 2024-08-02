@@ -1,11 +1,8 @@
 from abc import abstractmethod
 from collections.abc import Generator, KeysView
-from os import getenv
-from os.path import realpath
 from random import expovariate, randint, choices
 from typing import override
-from glob import glob
-from pathlib import Path
+import json
 
 Time = float
 
@@ -46,20 +43,6 @@ class FJSS:
     def generate_jobs(self) -> Generator[Job, None, None]: ...
 
 
-def load_env_lbs() -> dict[str, Time]:
-    env_tokens = (getenv("LOWER_BOUNDS") or "").split(":")
-    lbs: dict[str, Time] = {}
-    for token in env_tokens:
-        path, lower_bound = token.split("=")
-        path = realpath(path)
-        lower_bound = Time(lower_bound)
-        lbs[path] = lower_bound
-    return lbs
-
-
-LOWER_BOUNDS = load_env_lbs()
-
-
 class StaticFJSS(FJSS):
     name: str
     jobs: list[Job]
@@ -78,7 +61,7 @@ class StaticFJSS(FJSS):
         self.lower_bound = lower_bound
 
     @staticmethod
-    def load(path: str) -> "StaticFJSS":
+    def load(name: str, path: str, lower_bound: Time | None = None) -> "StaticFJSS":
         jobs: list[Job] = []
         with open(path, "r") as f:
             num_jobs, num_machines = list(map(int, f.readline().split()[:2]))
@@ -93,7 +76,7 @@ class StaticFJSS(FJSS):
                     num_processable_machines = nums.pop()
                     processing_times: dict[int, Time] = {}
                     for _ in range(num_processable_machines):
-                        index = nums.pop() - 1
+                        index = nums.pop()
                         time = Time(nums.pop())
                         processing_times[index] = time
                     op = Operation(f"{i + 1}:{j + 1}", processing_times)
@@ -103,12 +86,7 @@ class StaticFJSS(FJSS):
                 jobs.append(job)
 
             # shorten path
-            return StaticFJSS(
-                str(Path(*Path(path).parts[-3:])),
-                num_machines,
-                jobs,
-                LOWER_BOUNDS.get(realpath(path), None),
-            )
+            return StaticFJSS(name, num_machines, jobs, lower_bound)
 
     @override
     def generate_jobs(self) -> Generator[Job, None, None]:
@@ -143,23 +121,32 @@ class DynamicFJSS(FJSS):
             yield self.random_job(f"{i + 1}", time)
 
 
+FJSP_INSTANCES: dict[str, StaticFJSS] = {}
+
+with open("./fjsp-instances/instances.json") as f:
+    for instance in json.load(f):
+        path: str = instance["path"]
+        lower_bound: Time | None = instance["optimum"]
+        if lower_bound is None:
+            lower_bound = instance["bounds"]["lower"]
+        assert lower_bound is not None
+        problem = StaticFJSS.load(path, "./fjsp-instances/" + path, lower_bound)
+        FJSP_INSTANCES[path] = problem
+
+
 class StaticFJSSSet:
     problems: list[StaticFJSS]
 
-    def __init__(self, pattern: str):
-        self.problems = [StaticFJSS.load(path) for path in sorted(glob(pattern))]
-
-    @staticmethod
-    def barnes() -> "StaticFJSSSet":
-        return StaticFJSSSet("./dataset/Monaldo/Fjsp/Job_Data/Barnes/Text/*.fjs")
-
-    @staticmethod
-    def hurink() -> "StaticFJSSSet":
-        return StaticFJSSSet("./dataset/Monaldo/Fjsp/Job_Data/Hurink_Data/Text/*/*.fjs")
+    def __init__(self, prefix: str):
+        self.problems = [
+            problem
+            for path, problem in FJSP_INSTANCES.items()
+            if path.startswith(prefix)
+        ]
 
 
 if __name__ == "__main__":
-    sfjss = StaticFJSS.load("./dataset/Monaldo/Fjsp/Job_Data/Barnes/Text/mt10x.fjs")
+    sfjss = StaticFJSS.load("./fjsp-instances/barnes/mt10x.txt")
     assert sfjss.num_machines == 11
     assert len(sfjss.jobs) == 10
     assert len(sfjss.jobs[0].operations[0].processing_times) == 1

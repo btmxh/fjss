@@ -1,0 +1,3 @@
+[submodule "fjsp-instances"]
+	path = fjsp-instances
+	url = https://github.com/SchedulingLab/fjsp-instances
