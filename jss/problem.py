@@ -1,7 +1,8 @@
-from abc import abstractmethod
-from collections.abc import Generator, KeysView
+from abc import ABC, abstractmethod
+from collections.abc import Generator, Iterable, Iterator, KeysView
 from random import expovariate, randint, choices
 from typing import override
+from statistics import median
 import json
 
 Time = float
@@ -26,14 +27,34 @@ class Job:
     name: str
     arrival_time: Time
     operations: list[Operation]
+    weight: float
+
+    median_work_time: list[Time]
+    median_work_remaining: list[Time]
+    last_operation_ready_time: Time
 
     def __init__(self, name: str, arrival_time: Time, operations: list[Operation]):
         self.name = name
         self.arrival_time = arrival_time
         self.operations = list(operations)
+        self.weight = 1.0
+
+        self.median_work_time = []
+        self.median_work_remaining = []
+        self.last_operation_ready_time = Time(0)
+        cur_median_work_remaining = Time(0)
+
+        for op in reversed(operations):
+            cur_median_work_time = median(op.processing_times.values())
+            cur_median_work_remaining += cur_median_work_time
+            self.median_work_remaining.append(cur_median_work_remaining)
+            self.median_work_time.append(cur_median_work_time)
+
+    def update_ready_time(self, new_ready_time: Time):
+        self.last_operation_ready_time = new_ready_time
 
 
-class FJSS:
+class FJSS(ABC):
     num_machines: int
 
     def __init__(self, num_machines: int) -> None:
@@ -137,7 +158,7 @@ with open("./fjsp-instances/instances.json") as f:
         FJSP_INSTANCES[path] = problem
 
 
-class StaticFJSSSet:
+class StaticFJSSSet(Iterable[StaticFJSS]):
     problems: list[StaticFJSS]
 
     def __init__(self, prefix: str):
@@ -146,6 +167,13 @@ class StaticFJSSSet:
             for path, problem in FJSP_INSTANCES.items()
             if path.startswith(prefix)
         ]
+
+    def __len__(self) -> int:
+        return len(self.problems)
+
+    @override
+    def __iter__(self) -> Iterator[StaticFJSS]:
+        return iter(self.problems)
 
 
 if __name__ == "__main__":

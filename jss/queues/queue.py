@@ -1,7 +1,7 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 
 
-class Queue[T]:
+class Queue[T](ABC):
     @abstractmethod
     def push(self, value: T): ...
 

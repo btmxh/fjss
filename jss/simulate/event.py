@@ -1,9 +1,9 @@
 from typing import override
 from jss.problem import Job, Time
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 
 
-class SimulationEvent:
+class SimulationEvent(ABC):
     @abstractmethod
     def arrival_time(self) -> Time: ...
 
