@@ -1,6 +1,6 @@
-from jss.problem import StaticFJSS, StaticFJSSSet
-from jss.simulate.simulation import Simulation
-from jss.simulate.heuristics import (
+from fjss.problem import StaticFJSS, StaticFJSSSet
+from fjss.simulate.simulation import Simulation
+from fjss.simulate.heuristics import (
     FIFOMachineQueue,
     SPTMachineQueue,
     routing_rule_lwq,

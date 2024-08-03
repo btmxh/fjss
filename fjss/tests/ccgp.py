@@ -1,6 +1,6 @@
 from sys import argv
-from jss.gp.ccgp import CCGP
-from jss.problem import StaticFJSSSet
+from fjss.gp.ccgp import CCGP
+from fjss.problem import StaticFJSSSet
 
 
 problemset = StaticFJSSSet(argv[1])

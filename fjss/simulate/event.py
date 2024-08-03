@@ -1,5 +1,5 @@
 from typing import override
-from jss.problem import Job, Time
+from fjss.problem import Job, Time
 from abc import ABC, abstractmethod
 
 

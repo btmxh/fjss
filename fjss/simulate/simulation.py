@@ -1,9 +1,9 @@
 from typing import Callable, Self, override
 from os import getenv
-from jss.problem import FJSS, Job, Operation, Time
-from jss.queues.priority_queue import PriorityQueue
-from jss.queues.queue import Queue
-from jss.simulate.event import MachineFinishEvent, NewJobEvent, SimulationEvent
+from fjss.problem import FJSS, Job, Operation, Time
+from fjss.queues.priority_queue import PriorityQueue
+from fjss.queues.queue import Queue
+from fjss.simulate.event import MachineFinishEvent, NewJobEvent, SimulationEvent
 
 
 class MachineQueueItem:

@@ -1,5 +1,5 @@
 from collections.abc import Generator
-from jss.gp.program import Node, Program, random_generic, random_internal, random_terminal
+from fjss.gp.program import Node, Program, random_generic, random_internal, random_terminal
 from random import choice, random
 
 

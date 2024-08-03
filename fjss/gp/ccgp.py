@@ -1,10 +1,10 @@
 from collections.abc import Callable, Generator, Iterable
 from statistics import mean
-from jss.gp.gp_context import GPContext
-from jss.gp.program import Program
-from jss.problem import FJSS, StaticFJSS, Time
-from jss.queues.dynamic_priority_queue import DynamicPriorityQueue
-from jss.simulate.simulation import MachineQueueItem, Simulation
+from fjss.gp.gp_context import GPContext
+from fjss.gp.program import Program
+from fjss.problem import FJSS, StaticFJSS, Time
+from fjss.queues.dynamic_priority_queue import DynamicPriorityQueue
+from fjss.simulate.simulation import MachineQueueItem, Simulation
 from random import choice, choices
 from heapq import nsmallest
 from multiprocessing import Pool

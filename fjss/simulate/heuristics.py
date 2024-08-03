@@ -1,8 +1,8 @@
 from typing import Callable
-from jss.problem import Job, Time
-from jss.queues.fifo_queue import FIFOQueue
-from jss.queues.priority_queue import PriorityQueue
-from jss.simulate.simulation import MachineQueueItem, Simulation
+from fjss.problem import Job, Time
+from fjss.queues.fifo_queue import FIFOQueue
+from fjss.queues.priority_queue import PriorityQueue
+from fjss.simulate.simulation import MachineQueueItem, Simulation
 
 FIFOMachineQueue = FIFOQueue[MachineQueueItem]
 

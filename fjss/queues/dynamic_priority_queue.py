@@ -1,6 +1,6 @@
 from typing import Callable, Protocol, Self, cast, override
 from collections.abc import Iterable
-from jss.queues.queue import Queue
+from fjss.queues.queue import Queue
 
 
 class Comparable(Protocol):

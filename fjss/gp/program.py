@@ -1,8 +1,8 @@
 from collections.abc import Callable
 from random import choice, random
 from typing import override
-from jss.problem import Job
-from jss.simulate.simulation import Simulation
+from fjss.problem import Job
+from fjss.simulate.simulation import Simulation
 
 
 class Node:

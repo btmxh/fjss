@@ -1,7 +1,7 @@
 from collections import deque
 from typing import override
 
-from jss.queues.queue import Queue
+from fjss.queues.queue import Queue
 
 
 class FIFOQueue[T](Queue[T]):
