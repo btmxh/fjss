@@ -144,6 +144,9 @@ class DynamicFJSS(FJSS):
             time += Time(expovariate(self.utilization_rate))
             yield self.random_job(f"{i + 1}", time)
 
+    def pregenerate(self, name: str) -> StaticFJSS:
+        return StaticFJSS(name, self.num_machines, list(self.generate_jobs()), None)
+
 
 FJSP_INSTANCES: dict[str, StaticFJSS] = {}
 

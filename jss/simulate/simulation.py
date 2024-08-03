@@ -126,6 +126,7 @@ class Simulation:
     def handle_new_operation(self, job: Job, op_index: int):
         if op_index >= len(job.operations):
             return
+        job.update_ready_time(self.now)
         machine = self.routing_rule(self, job, op_index)
         self.log(
             f"Routing operation {job.operations[op_index].name} to machine {machine + 1} at time {self.now}"
